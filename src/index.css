@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Assistant', sans-serif;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900 antialiased;
+    margin: 0;
+    min-height: 100vh;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
+  }
+
+  .btn-secondary {
+    @apply btn bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-500;
+  }
+
+  .btn-success {
+    @apply btn bg-success-500 text-white hover:bg-success-600 focus:ring-success-500;
+  }
+
+  .btn-error {
+    @apply btn bg-error-500 text-white hover:bg-error-600 focus:ring-error-500;
+  }
+
+  .card {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 p-4 md:p-6;
+  }
+
+  .input {
+    @apply block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500;
+  }
+
+  .exercise-option {
+    @apply min-h-[44px] min-w-[44px] p-4 rounded-xl border-2 border-gray-200 bg-white text-center cursor-pointer transition-all duration-200 hover:border-primary-300 hover:bg-primary-50 active:scale-95;
+  }
+
+  .exercise-option-selected {
+    @apply border-primary-500 bg-primary-50;
+  }
+
+  .exercise-option-correct {
+    @apply border-success-500 bg-success-100 text-success-700;
+  }
+
+  .exercise-option-incorrect {
+    @apply border-error-500 bg-error-100 text-error-700 animate-shake;
+  }
+
+  .rtl {
+    direction: rtl;
+    text-align: right;
+  }
+
+  .ltr {
+    direction: ltr;
+    text-align: left;
+  }
+}
+
+@layer utilities {
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+}
