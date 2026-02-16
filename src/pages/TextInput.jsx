@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Card, Button, Badge } from '../components/ui';
 import TextDisplay from '../components/TextDisplay';
@@ -11,9 +11,11 @@ import toast from 'react-hot-toast';
 function TextInput() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { userData } = useAuth();
 
-  const [view, setView] = useState(id ? 'select' : 'list');
+  const isNewRoute = location.pathname.endsWith('/new');
+  const [view, setView] = useState(id ? 'select' : isNewRoute ? 'input' : 'list');
   const [textUnits, setTextUnits] = useState([]);
   const [loading, setLoading] = useState(true);
 
