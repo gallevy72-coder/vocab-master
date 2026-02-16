@@ -65,19 +65,9 @@ export const BADGES = {
   },
 };
 
-// Exercise types
+// Exercise types (kept for potential future use)
 export const EXERCISE_TYPES = {
   MATCHING: 'matching',
-  VISUAL: 'visual',
-  AUDIO: 'audio',
-  SENTENCE: 'sentence',
-  STORY: 'story',
-};
-
-// Feedback delays in ms
-export const FEEDBACK_DELAY = {
-  IMMEDIATE: 0,
-  DELAYED: 600,
 };
 
 // Default word list for demo purposes

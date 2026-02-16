@@ -1,12 +1,9 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { useGame } from '../contexts/GameContext';
-import { ProgressBar } from './ui';
 
 function Layout({ children }) {
   const { user, userData, logout, isTeacher } = useAuth();
-  const { currentLevel, levelProgress } = useGame();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -23,13 +20,11 @@ function Layout({ children }) {
   const navItems = isTeacher
     ? [
         { path: '/teacher', label: 'Dashboard', labelHe: 'לוח בקרה' },
-        { path: '/teacher/word-lists', label: 'Word Lists', labelHe: 'רשימות מילים' },
+        { path: '/teacher/texts', label: 'Texts', labelHe: 'טקסטים' },
         { path: '/teacher/students', label: 'Students', labelHe: 'תלמידים' },
       ]
     : [
-        { path: '/dashboard', label: 'Dashboard', labelHe: 'לוח בקרה' },
-        { path: '/practice', label: 'Practice', labelHe: 'תרגול' },
-        { path: '/progress', label: 'Progress', labelHe: 'התקדמות' },
+        { path: '/dashboard', label: 'Texts', labelHe: 'טקסטים' },
       ];
 
   const isActive = (path) => location.pathname === path;
@@ -68,19 +63,6 @@ function Layout({ children }) {
               {/* User Menu */}
               {user && (
                 <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-gray-200">
-                  {!isTeacher && (
-                    <div className="flex items-center space-x-2">
-                      <div className="text-right">
-                        <div className="text-xs text-gray-500">Level {currentLevel}</div>
-                        <div className="w-24">
-                          <ProgressBar value={levelProgress} size="sm" />
-                        </div>
-                      </div>
-                      <div className="w-8 h-8 rounded-full bg-primary-500 text-white flex items-center justify-center font-bold text-sm">
-                        {currentLevel}
-                      </div>
-                    </div>
-                  )}
                   <div className="text-sm">
                     <p className="font-medium text-gray-900">{userData?.name}</p>
                     <p className="text-gray-500 text-xs">{isTeacher ? 'Teacher' : 'Student'}</p>

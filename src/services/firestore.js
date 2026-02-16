@@ -7,9 +7,9 @@ const STORAGE_KEY = 'vocab_master_demo';
 function getDemoStorage() {
   try {
     const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : { users: {}, currentUser: null, wordLists: [], progress: [] };
+    return data ? JSON.parse(data) : { users: {}, currentUser: null, wordLists: [], textUnits: [], progress: [] };
   } catch {
-    return { users: {}, currentUser: null, wordLists: [], progress: [] };
+    return { users: {}, currentUser: null, wordLists: [], textUnits: [], progress: [] };
   }
 }
 
@@ -125,6 +125,116 @@ export async function deleteWordList(listId) {
   const { doc, deleteDoc } = await import('firebase/firestore');
   const { db } = await import('../config/firebase');
   const docRef = doc(db, 'wordLists', listId);
+  await deleteDoc(docRef);
+}
+
+// ==================== Text Units ====================
+
+export async function createTextUnit(teacherId, title, text, words) {
+  const unitData = {
+    id: 'text_' + Date.now(),
+    teacherId,
+    title,
+    text,
+    words: words.map((word, index) => ({
+      id: word.id || `tw_${Date.now()}_${index}`,
+      en: word.en,
+      he: word.he,
+      sentenceInText: word.sentenceInText || '',
+    })),
+    createdAt: new Date().toISOString(),
+  };
+
+  if (DEMO_MODE) {
+    const storage = getDemoStorage();
+    storage.textUnits = storage.textUnits || [];
+    storage.textUnits.unshift(unitData);
+    setDemoStorage(storage);
+    return unitData;
+  }
+
+  const { collection, addDoc, serverTimestamp } = await import('firebase/firestore');
+  const { db } = await import('../config/firebase');
+  const docRef = await addDoc(collection(db, 'textUnits'), { ...unitData, createdAt: serverTimestamp() });
+  return { ...unitData, id: docRef.id };
+}
+
+export async function getTextUnits(teacherId = null) {
+  if (DEMO_MODE) {
+    const storage = getDemoStorage();
+    const units = storage.textUnits || [];
+    if (teacherId) {
+      return units.filter((u) => u.teacherId === teacherId);
+    }
+    return units;
+  }
+
+  const { collection, getDocs, query, where, orderBy } = await import('firebase/firestore');
+  const { db } = await import('../config/firebase');
+
+  let q;
+  if (teacherId) {
+    q = query(
+      collection(db, 'textUnits'),
+      where('teacherId', '==', teacherId),
+      orderBy('createdAt', 'desc')
+    );
+  } else {
+    q = query(collection(db, 'textUnits'), orderBy('createdAt', 'desc'));
+  }
+
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+}
+
+export async function getTextUnit(unitId) {
+  if (DEMO_MODE) {
+    const storage = getDemoStorage();
+    const unit = (storage.textUnits || []).find((u) => u.id === unitId);
+    if (!unit) throw new Error('Text unit not found');
+    return unit;
+  }
+
+  const { doc, getDoc } = await import('firebase/firestore');
+  const { db } = await import('../config/firebase');
+  const docRef = doc(db, 'textUnits', unitId);
+  const docSnap = await getDoc(docRef);
+
+  if (!docSnap.exists()) {
+    throw new Error('Text unit not found');
+  }
+
+  return { id: docSnap.id, ...docSnap.data() };
+}
+
+export async function updateTextUnit(unitId, updates) {
+  if (DEMO_MODE) {
+    const storage = getDemoStorage();
+    const index = (storage.textUnits || []).findIndex((u) => u.id === unitId);
+    if (index !== -1) {
+      storage.textUnits[index] = { ...storage.textUnits[index], ...updates };
+      setDemoStorage(storage);
+    }
+    return;
+  }
+
+  const { doc, updateDoc } = await import('firebase/firestore');
+  const { db } = await import('../config/firebase');
+  const docRef = doc(db, 'textUnits', unitId);
+  await updateDoc(docRef, updates);
+}
+
+export async function deleteTextUnit(unitId) {
+  if (DEMO_MODE) {
+    const storage = getDemoStorage();
+    storage.textUnits = (storage.textUnits || []).filter((u) => u.id !== unitId);
+    setDemoStorage(storage);
+    return;
+  }
+
+  const { doc, deleteDoc } = await import('firebase/firestore');
+  const { db } = await import('../config/firebase');
+  const docRef = doc(db, 'textUnits', unitId);
   await deleteDoc(docRef);
 }
 

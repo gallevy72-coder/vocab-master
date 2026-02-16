@@ -9,10 +9,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
-import Practice from './pages/Practice';
-import Progress from './pages/Progress';
+import StudentReading from './pages/StudentReading';
 import TeacherPortal from './pages/TeacherPortal';
-import WordLists from './pages/WordLists';
+import TextInput from './pages/TextInput';
 import Students from './pages/Students';
 
 function App() {
@@ -60,21 +59,11 @@ function App() {
               }
             />
             <Route
-              path="/practice"
+              path="/read/:id"
               element={
                 <ProtectedRoute>
                   <Layout>
-                    <Practice />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/progress"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <Progress />
+                    <StudentReading />
                   </Layout>
                 </ProtectedRoute>
               }
@@ -92,31 +81,31 @@ function App() {
               }
             />
             <Route
-              path="/teacher/word-lists"
+              path="/teacher/texts"
               element={
                 <ProtectedRoute requireTeacher>
                   <Layout>
-                    <WordLists />
+                    <TextInput />
                   </Layout>
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/teacher/word-lists/new"
+              path="/teacher/texts/new"
               element={
                 <ProtectedRoute requireTeacher>
                   <Layout>
-                    <WordLists />
+                    <TextInput />
                   </Layout>
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/teacher/word-lists/:id"
+              path="/teacher/texts/:id"
               element={
                 <ProtectedRoute requireTeacher>
                   <Layout>
-                    <WordLists />
+                    <TextInput />
                   </Layout>
                 </ProtectedRoute>
               }
